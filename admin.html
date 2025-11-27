@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - GAZROM 3D Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        #review-area {
+            overflow-y: auto;
+        }
+        .review-column textarea {
+            background-color: var(--c-bg-main) !important;
+            color: var(--c-text-primary) !important;
+            border-color: var(--c-border) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menubar">
+        <div class="logo"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg></div>
+        <div class="menu-item"><span>Admin Panel</span></div>
+    </div>
+    <div class="app-layout">
+        <aside class="left-panel" style="width: 300px;">
+            <div class="panel-title">СТУДЕНТЫ</div>
+            <div id="student-list">
+                <div class="student-item" data-id="student_1">
+                    <span>Студент 1 (Иванов)</span>
+                    <span class="status">нет заданий</span>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content" id="review-area" style="padding: 24px; background: var(--c-bg-main);">
+            <h2>Выберите студента для проверки</h2>
+            <p style="color: var(--c-text-secondary);">Здесь будут отображены ответы для проверки.</p>
+        </main>
+    </div>
+
+    <script type="module" src="js/tickets.js"></script>
+    <script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - GAZROM 3D Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background: var(--c-bg-deep); }
+        .login-container { background-color: var(--c-bg-surface); padding: 40px; border-radius: 12px; border: 1px solid var(--c-border); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .logo-big svg { width: 64px; height: 64px; margin-bottom: 20px; color: var(--c-primary); }
+        h1 { margin-bottom: 30px; font-size: 22px; font-weight: 400; letter-spacing: 1px; color: var(--c-text-primary); }
+        .login-input { width: 100%; padding: 14px; margin-bottom: 20px; background-color: var(--c-bg-deep); border: 1px solid var(--c-border); border-radius: 8px; color: var(--c-text-primary); font-size: 16px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--c-primary); }
+        .login-button { width: 100%; padding: 14px; background-color: var(--c-primary); border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .login-button:hover { background-color: var(--c-primary-hover); transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-big">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+        </div>
+        <h1>GAZROM 3D STUDIO</h1>
+        <input type="text" id="nameInput" class="login-input" placeholder="Введите ваше ФИО">
+        <button id="loginButton" class="login-button">Начать работу</button>
+    </div>
+
+    <script>
+        document.getElementById('loginButton').addEventListener('click', () => {
+            const studentName = document.getElementById('nameInput').value.trim() || 'Студент';
+            localStorage.setItem('studentName', studentName);
+            const currentUrlParams = window.location.search; 
+            window.location.href = `index.html${currentUrlParams}`; 
+        });
+        
+        document.getElementById('nameInput').addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') document.getElementById('loginButton').click();
+        });
+    </script>
+</body>
+</html>

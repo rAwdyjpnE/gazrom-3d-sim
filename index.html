@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAZROM 3D Studio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-tools {
+            position: absolute; 
+            top: 80px; 
+            right: 24px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 12px; 
+            border-radius: 8px;
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px;
+            border: 1px solid #ef4444;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        .admin-label { color: #ef4444; font-size: 10px; text-transform: uppercase; font-weight: bold; margin-bottom: 4px;}
+        
+        .check-btn-area {
+            position: absolute; bottom: 140px; right: 24px;
+            z-index: 100;
+        }
+        .feedback-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 3000;
+        }
+        .feedback-card {
+            background: var(--c-bg-surface); padding: 30px; border-radius: 12px;
+            text-align: center; border: 1px solid var(--c-border);
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-left logo-area">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            <div class="logo-text">3D STUDIO</div>
+        </div>
+        <div class="header-center">
+            <div class="mode-switcher">
+                <div class="mode-btn active" data-mode="practice">3D Workspace</div>
+                <div class="mode-btn" data-mode="testing">Exam / Tickets</div>
+            </div>
+        </div>
+        <div class="header-right user-info">
+            <span id="studentNameDisplay">Студент</span>
+        </div>
+    </header>
+
+    <div class="admin-tools" id="admin-panel">
+        <div class="admin-label">Teacher Tools</div>
+        <button id="btn-toggle-zone-edit" class="btn-primary" style="font-size: 12px; padding: 6px;">✏️ Edit Zones</button>
+        <button id="btn-save-zones" class="btn-primary" style="font-size: 12px; padding: 6px; background: #0ea5e9;">💾 Download JSON</button>
+        <button id="btn-load-zones" class="btn-primary" style="font-size: 12px; padding: 6px; background: #8b5cf6;">📂 Load JSON</button>
+        <button id="btn-clear-zones" class="btn-primary" style="font-size: 12px; padding: 6px; background: #ef4444;">🗑️ Clear Zones</button>
+    </div>
+
+    <main class="main-viewport">
+        <canvas id="canvas"></canvas>
+
+        <div class="check-btn-area hidden" id="check-area">
+            <button id="btn-check-task" class="btn-primary" style="background: #10b981; font-size: 16px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                ✅ Проверить маркировку
+            </button>
+        </div>
+
+        <div id="tools-panel" class="left-toolbar">
+            <div class="tool-btn" id="tool-import" title="Import Model"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></div>
+            <div class="tool-divider" style="height: 1px; background: var(--c-border); margin: 4px 0;"></div>
+            <div class="tool-btn active" id="tool-select"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path></svg></div>
+            <div class="tool-btn" id="tool-sticker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg></div>
+            <div class="tool-btn" id="tool-eraser"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13l-6.5 6.5a2.12 2.12 0 1 1-3-3L15 10"></path><path d="M6 14l7.1-7.1a2.12 2.12 0 1 1 3 3L9 17"></path></svg></div>
+        </div>
+
+        <div id="sticker-drawer" class="bottom-drawer">
+            <div class="drawer-header">ADR Marking Library</div>
+            <div class="stickers-container">
+                <div class="sticker-option" data-sticker="🔥"><span class="char-sticker">🔥</span><label>Flammable</label></div>
+                <div class="sticker-option" data-sticker="☠️"><span class="char-sticker">☠️</span><label>Toxic</label></div>
+                <div class="sticker-option" data-sticker="🧪"><span class="char-sticker">🧪</span><label>Corrosive</label></div>
+                <div class="sticker-option" data-sticker="🟢"><span class="char-sticker">🟢</span><label>Env.</label></div>
+                <div class="sticker-option" data-sticker="🟧"><span class="char-sticker">🟧</span><label>Empty</label></div>
+                <div class="sticker-option" data-sticker="🛢️"><span class="char-sticker">1202</span><label>Diesel</label></div>
+                <div class="sticker-option" data-sticker="⛽"><span class="char-sticker">1203</span><label>Petrol</label></div>
+            </div>
+        </div>
+
+        <div id="testing-view" class="hidden">
+            <div class="exam-container">
+                <div class="exam-header"><h2>Экзаменационный билет</h2></div>
+                <div id="test-content"><button id="startTestBtn" class="btn-primary">Получить билет</button></div>
+            </div>
+        </div>
+
+        <div id="result-modal" class="feedback-overlay hidden">
+            <div class="feedback-card">
+                <h2 id="result-title">Результат</h2>
+                <p id="result-message" style="margin: 20px 0; color: var(--c-text-secondary);"></p>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btn-review" class="btn-primary" style="background: #3b82f6;">👀 Показать ошибки</button>
+                    <button id="btn-close-result" class="btn-primary" style="background: #334155;">Закрыть</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="custom-modal" class="custom-modal hidden">
+        <div class="custom-modal-overlay"></div>
+        <div class="custom-modal-content">
+            <h3 id="modal-title">Title</h3>
+            <p id="modal-message">Message goes here...</p>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn-primary" style="background: #475569;">Отмена</button>
+                <button id="modal-confirm" class="btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".glb,.gltf,.stl" class="hidden">
+    <input type="file" id="zoneInput" accept=".json" class="hidden">
+
+    <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
